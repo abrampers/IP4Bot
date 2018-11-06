@@ -68,7 +68,7 @@ bot.on('message', (ctx) => {
     } else if (text.contains(['start', 'exercise'])) {
         ctx.replyWithHTML('Hi ' + ctx.message.from.first_name + '! Welcome to Subject Exercise for IP4 😁. \n\nThis Exercise is a fascinating challange you surely gonna love!\n\nAre you ready to go ? 😁\n\nPress the “subject” do want to start the exercise.')
     
-    } else if (text.contains(['hello'])) {
+    } else if (text.contains([['hello', 'halo', 'hi']])) {
         ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
     } else {
         ctx.reply('Sorry, I don\'t understand that. ☹️')
