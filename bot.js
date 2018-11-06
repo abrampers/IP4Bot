@@ -35,7 +35,9 @@ const keyboard = Markup.inlineKeyboard([
 
 // Events
 bot.start((ctx) => {
-    ctx.reply('Hello ' + ctx.message.from.first_name + ', IP4 the bot is ready to serve! 🤖')
+    ctx.reply('Hello ' + ctx.message.from.first_name + ', IP4 the bot is ready to serve! 🤖').then(() => {
+        startReminders(ctx)
+    })
 })
 bot.help((ctx) => ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan'))
 
@@ -44,8 +46,6 @@ bot.action('delete', ({ deleteMessage }) => deleteMessage())
 
 // Replies
 bot.on('message', (ctx) => {
-    // ctx.telegram.sendCopy(ctx.from.id, ctx.message, Extra.markup(keyboard))
-    // ctx.telegram.sendMessage(ctx.from.id, 'kuntul')
     const text = ctx.message.text
     if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
         const num = text.getNum()
@@ -71,8 +71,25 @@ bot.on('message', (ctx) => {
     } else if (text.contains([['hello', 'halo', 'hi']])) {
         ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
     } else {
-        ctx.reply('Sorry, I don\'t understand that. ☹️')
+        ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
 })
 
+// Time-based reminders
+function startReminders(ctx) {
+    setInterval(() => {
+        const date = new Date()
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const seconds = date.getSeconds()
+
+        if (hours == 15 && minutes == 36 && seconds == 0) {
+            const eventHours = Math.floor(hours + (minutes + 30) / 60)
+            const eventMinutes = (minutes + 30) % 60
+            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' + eventHours + ':' + eventMinutes + 'AM!')
+        }
+    }, 1000)
+}
+
+// Start the bot
 bot.startPolling()
