@@ -53,8 +53,15 @@ bot.on('message', (ctx) => {
     } else if (text.contains([[/(set)/i, /(change)/i], /(class)/i, /(reminder)/i])) {
         const num = text.replace ( /[^\d.]/g, '' );
         ctx.reply('Alright! We’ll remind you ' + num + ' minutes before class.')
+    } else if (text.contains([[/(set)/i, /(change)/i], /(deadline)/i, /(reminder)/i])) {
+        const num = text.replace ( /[^\d.]/g, '' );
+        ctx.reply('Alright! We’ll remind you ' + num + ' hours before deadlines.')
     } else if (text.contains([[/(set)/i, /(change)/i], [/(homework)/i, /(quiz)/i, /(deadline)/i], /(reminder)/i])) {
         ctx.reply('HWQ reminder')
+    } else if (text.contains([/(what)/i, /(sanction)/i, [/(plagiarism)/i, /(copy)/i, /(fraud)/i]])) {
+        ctx.replyWithHTML('Hi ' + ctx.message.from.first_name + ' 😁, Thank You for your question.. \nFraud, copy or plagiarism committed in any form of assessment of a course unit may lead to the <b>suspension</b> of the student\'s academic assessment for the period of one year, as well as to temporary suspension of his/her educational activities.')
+    } else if (text.contains([/(start)/i, /(exercise)/i])) {
+        ctx.replyWithHTML('Hi ' + ctx.message.from.first_name + '! Welcome to Subject Exercise for IP4 😁. \n\nThis Exercise is a fascinating challange you surely gonna love!\n\nAre you ready to go ? 😁\n\nPress the “subject” do want to start the exercise.')
     } else {
         ctx.reply('Sorry, I don\'t understand that. ☹️')
     }
