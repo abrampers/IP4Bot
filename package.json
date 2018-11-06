@@ -1,6 +1,8 @@
 {
+  "scripts": {
+    "start": "node bot.js"
+  },
   "dependencies": {
-    "@line/bot-sdk": "^6.3.0",
     "localtunnel": "^1.9.1",
     "telegraf": "^3.25.0"
   }

@@ -1,34 +1,37 @@
 const Telegraf = require('telegraf')
-const fetch = require('node-fetch')
+const Extra = require('telegraf/extra')
+const Markup = require('telegraf/markup')
 
+const LT_URL = 'https://black-rattlesnake-84.localtunnel.me'
 const BOT_TOKEN = '747892200:AAESi-TqEW25rLjhgQvRaZrkXL80uBlDuNU';
-
 const bot = new Telegraf(BOT_TOKEN)
 
-bot.use(Telegraf.log())
+// Keyboards
+const keyboard = Markup.inlineKeyboard([
+  Markup.urlButton('❤️', 'http://telegraf.js.org'),
+  Markup.callbackButton('Delete', 'delete')
+])
 
-async function spotifySearch (query = '', offset, limit) {
-    const apiUrl = `https://api.spotify.com/v1/search?type=track&limit=${limit}&offset=${offset}&q=${encodeURIComponent(query)}`
-    const response = await fetch(apiUrl)
-    const { tracks } = await response.json()
-    return tracks.items
-}
-  
-bot.on('inline_query', async ({ inlineQuery, answerInlineQuery }) => {
-    const offset = parseInt(inlineQuery.offset) || 0
-    const tracks = await spotifySearch(inlineQuery.query, offset, 30)
-    const results = tracks.map((track) => ({
-        type: 'audio',
-        id: track.id,
-        title: track.name,
-        audio_url: track.preview_url
-    }))
-    return answerInlineQuery(results, { next_offset: offset + 30 })
+// Events
+bot.start((ctx) => {
+    ctx.reply('Hello ' + ctx.message.from.first_name + ', IP4 the bot is ready to serve! 🤖')
+})
+bot.help((ctx) => ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan'))
+
+// Actions
+bot.action('delete', ({ deleteMessage }) => deleteMessage())
+
+// Replies
+bot.on('message', (ctx) => {
+    // ctx.telegram.sendCopy(ctx.from.id, ctx.message, Extra.markup(keyboard))
+    // ctx.telegram.sendMessage(ctx.from.id, 'kuntul')
+    if (ctx.message.text.includes('set') && ctx.message.text.includes('daily reminder')) {
+        ctx.reply('asu bangsat')
+    } else {
+        ctx.reply('belom ngerti bang')
+    }
 })
 
-// Set telegram webhook
 // npm install -g localtunnel && lt --port 3000
-bot.telegram.setWebhook('https://curvy-zebra-51.localtunnel.me/secret-path')
-
-// Start https webhook
-bot.startWebhook('/secret-path', null, 3000)
+bot.telegram.setWebhook(LT_URL + '/asu')
+bot.startWebhook('/asu', null, 3000)
