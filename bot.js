@@ -29,8 +29,8 @@ String.prototype.getNum = function() {
 
 // Keyboards
 const keyboard = Markup.inlineKeyboard([
-  Markup.urlButton('❤️', 'http://telegraf.js.org'),
-  Markup.callbackButton('Delete', 'delete')
+  Markup.urlButton('Details', 'http://telegraf.js.org'),
+//   Markup.callbackButton('Delete', 'delete')
 ])
 
 // Events
@@ -41,31 +41,6 @@ bot.start((ctx) => {
 })
 
 bot.help((ctx) => ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan'))
-
-bot.command('onetime', ({ reply }) =>
-  reply('One time keyboard', Markup
-    .keyboard(['/simple', '/inline', '/pyramid'])
-    .oneTime()
-    .resize()
-    .extra()
-  )
-)
-
-bot.command('custom', ({ reply }) => {
-  return reply('Custom buttons keyboard', Markup
-    .keyboard([
-      ['🔍 Search', '😎 Popular'], // Row1 with 2 buttons
-      ['☸ Setting', '📞 Feedback'], // Row2 with 2 buttons
-      ['📢 Ads', '⭐️ Rate us', '👥 Share'] // Row3 with 3 buttons
-    ])
-    .oneTime()
-    .resize()
-    .extra()
-  )
-})
-
-bot.hears('🔍 Search', ctx => ctx.reply('Yay!'))
-bot.hears('📢 Ads', ctx => ctx.reply('Free hugs. Call now!'))
 
 // Actions
 bot.action('delete', ({ deleteMessage }) => deleteMessage())
@@ -93,74 +68,74 @@ bot.on('message', (ctx) => {
 
     } else if (text.contains(['start', 'exercise'])) {
         ctx.reply('Hi ' + ctx.message.from.first_name + '! Welcome to Subject Exercise for IP4 😁. \n\nThis Exercise is a fascinating challange you surely gonna love!\n\nAre you ready to go ? 😁\n\nPress the “subject” do want to start the exercise.', Markup
-        .keyboard([
-          ['TTKI', 'PTI'], 
-          ['KIMIA', 'ENGLISH'], 
-        ])
-        .oneTime()
-        .resize()
-        .extra()
-      )
+            .keyboard([
+            ['TTKI', 'PTI'], 
+            ['KIMIA', 'ENGLISH'], 
+            ])
+            .oneTime()
+            .resize()
+            .extra()
+        )
     } else if (text == 'PTI') {
         ctx.reply('Do you know? When did personal computers become available?', Markup
             .keyboard([
-              ['Before 1950'], 
-              ['Between 1950 and 1965'],
-              ['Between 1966 and 1990'], 
-              ['Between 1991 and 2005'], 
+                ['Before 1950'], 
+                ['Between 1950 and 1965'],
+                ['Between 1966 and 1990'], 
+                ['Between 1991 and 2005'], 
             ])
             .oneTime()
             .resize()
             .extra()
-          )
+        )
     } else if (text == 'Before 1950' || text == 'Between 1950 and 1965' || text == 'Between 1966 and 1990' || text == 'Between 1991 and 2005') {
         ctx.reply('Which of these technologies was developed most recently', Markup
             .keyboard([
-              ['The mainframe computer'], 
-              ['The laptop computer'],
-              ['The netbook'], 
-              ['The embedded computer'], 
+                ['The mainframe computer'], 
+                ['The laptop computer'],
+                ['The netbook'], 
+                ['The embedded computer'], 
             ])
             .oneTime()
             .resize()
             .extra()
-          )
+        )
     } else if (text == 'The mainframe computer' || text == 'The laptop computer' || text == 'The netbook' || text == 'The embedded computer') {
         ctx.reply('Storage devices can be connected to the CPU and memory via ...', Markup
             .keyboard([
-              ['Expansion slots'], 
-              ['Ports'],
-              ['Bays'], 
-              ['All of the above'], 
+                ['Expansion slots'], 
+                ['Ports'],
+                ['Bays'], 
+                ['All of the above'], 
             ])
             .oneTime()
             .resize()
             .extra()
-          )
+        )
     } else if (text == 'Expansion slots' || text == 'Ports' || text == 'Bays' || text == 'All of the above') {
         ctx.reply('A computer’s internal bus can be connected to an external bus through ...', Markup
             .keyboard([
-              ['a Depot'], 
-              ['a CPU'],
-              ['a Port'], 
-              ['a Flash'], 
+                ['a Depot'], 
+                ['a CPU'],
+                ['a Port'], 
+                ['a Flash'], 
             ])
             .oneTime()
             .resize()
             .extra()
-          )
+        )
     } else if (text == 'a Depot' || text == 'a Port' || text == 'a CPU' || text == 'a Flash') {
         ctx.reply('When you are working on an unsaved document on a PC, where is the document temporarily stored?', Markup
             .keyboard([
-              ['RAM'], 
-              ['ROM'],
-              ['CPU'], 
-              ['Internet'], 
+                ['RAM'], 
+                ['ROM'],
+                ['CPU'], 
+                ['Internet'], 
             ])
             .oneTime()
             .resize()
             .extra()
-          )
+        )
     } else if (text == 'a Depot' || text == 'a Port' || text == 'a CPU' || text == 'a Flash') {
         ctx.reply(ctx.message.from.first_name + ', You get 50 points in this exercise ☹️\n\nToo bad, you have to study harder ☹️');
     } else if (text == 'TTKI') {
@@ -171,6 +146,8 @@ bot.on('message', (ctx) => {
         ctx.reply('This exercise is not available yet ☹️');
     } else if (text.contains([['hello', 'halo', 'hi']])) {
         ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
+    } else if (text.contains(['help'])) {
+        ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
     } else {
         ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
@@ -180,14 +157,33 @@ bot.on('message', (ctx) => {
 function startReminders(ctx) {
     setInterval(() => {
         const date = new Date()
+        const day = date.getDay()
         const hours = date.getHours()
         const minutes = date.getMinutes()
         const seconds = date.getSeconds()
 
-        if (hours == 15 && minutes == 36 && seconds == 0) {
-            const eventHours = Math.floor(hours + (minutes + 30) / 60)
-            const eventMinutes = (minutes + 30) % 60
-            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' + eventHours + ':' + eventMinutes + 'AM!')
+        // Class reminder
+        // if (hours == 16 && minutes == 6 && seconds == 0) {
+        if (seconds == 0) {
+            const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
+            const eventMinutes = '' + (minutes + 30) % 60
+            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' + 
+                    eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!')
+        }
+        // Homework/quiz deadline reminder
+        // if (hours == 16 && minutes == 8 && seconds == 0) {
+        if (seconds == 0) {
+            ctx.reply('Don\'t forget your AI homework. It\'s due on November 7!', Extra.markup(keyboard))
+        }
+        // Class attendance reminder
+        // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
+        if (seconds == 0) {
+            ctx.reply('Hi ' + ctx.message.from.first_name + ', watch out on your AI attendance, you only have 1 absence left!')
+        }
+        // Bad score reminder
+        // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
+        if (seconds == 0) {
+            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Extra.markup(keyboard))
         }
     }, 1000)
 }
