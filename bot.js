@@ -51,12 +51,25 @@ bot.on('message', (ctx) => {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you at ' + text.getNum() + ' everyday.')
         else ctx.reply('Please state when you would like to be reminded.')
+
     } else if (text.contains([['set', 'change'], 'class', 'reminder'])) {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you ' + num + ' minutes before class.')
         else ctx.reply('Please state when you would like to be reminded.')
+
     } else if (text.contains([['set', 'change'], ['homework', 'quiz', 'deadline'], 'reminder'])) {
-        ctx.reply('HWQ reminder')
+        const num = text.getNum()
+        if (num) ctx.reply('Alright! We’ll remind you ' + num + ' hours before deadline.')
+        else ctx.reply('Please state when you would like to be reminded.')
+
+    } else if (text.contains(['what', 'sanction', ['plagiarism', 'copy', 'fraud']])) {
+        ctx.replyWithHTML('Hi ' + ctx.message.from.first_name + ' 😁, Thank You for your question.. \nFraud, copy or plagiarism committed in any form of assessment of a course unit may lead to the <b>suspension</b> of the student\'s academic assessment for the period of one year, as well as to temporary suspension of his/her educational activities.')
+
+    } else if (text.contains(['start', 'exercise'])) {
+        ctx.replyWithHTML('Hi ' + ctx.message.from.first_name + '! Welcome to Subject Exercise for IP4 😁. \n\nThis Exercise is a fascinating challange you surely gonna love!\n\nAre you ready to go ? 😁\n\nPress the “subject” do want to start the exercise.')
+    
+    } else if (text.contains(['hello'])) {
+        ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
     } else {
         ctx.reply('Sorry, I don\'t understand that. ☹️')
     }
