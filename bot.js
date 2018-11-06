@@ -8,12 +8,24 @@ const bot = new Telegraf(BOT_TOKEN)
 
 // Helpers
 String.prototype.contains = function(words) {
-    let match = true
-    const text = this.toLowerCase()
-    for (let word of words) {
-        match = text.includes(word.toLowerCase())
+    if (this.trim().split(' ').length == words.length) {
+        let wordsMatch = true
+        const text = this.toLowerCase()
+        for (let word of words) {
+            if (Array.isArray(words)) {
+                let optionOccurs = false
+                for (let option of word) {
+                    optionOccurs = optionOccurs || text.includes(option.toLowerCase())
+                }
+                wordsMatch = wordsMatch && optionOccurs
+            } else {
+                wordsMatch = wordsMatch && text.includes(word.toLowerCase())
+            }
+        }
+        return wordsMatch
+    } else {
+        return false
     }
-    return match
 }
 
 // Keyboards
@@ -36,15 +48,18 @@ bot.on('message', (ctx) => {
     // ctx.telegram.sendCopy(ctx.from.id, ctx.message, Extra.markup(keyboard))
     // ctx.telegram.sendMessage(ctx.from.id, 'kuntul')
     const text = ctx.message.text
-    if (text.contains(['set', 'daily', 'reminder'])) {
-        ctx.reply('Okay, I will remind you every huyu')
+    if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
+        ctx.reply('Daily reminder')
+    } else if (text.contains([['set', 'change'], 'class', 'reminder'])) {
+        ctx.reply('Class reminder')
+    } else if (text.contains([['set', 'change'], ['homework', 'quiz', 'deadline'], 'reminder'])) {
+        ctx.reply('HWQ reminder')
     } else {
-        ctx.reply('belom ngerti bang')
+        ctx.reply('Sorry, I don\'t understand that. ☹️')
     }
 })
 
 // npm install -g localtunnel && lt --port 3000
 // bot.telegram.setWebhook(LT_URL + '/asu')
 // bot.startWebhook('/asu', null, 3000)
-
 bot.startPolling()
