@@ -7,24 +7,24 @@ const bot = new Telegraf(BOT_TOKEN)
 
 // Helpers
 String.prototype.contains = function(words) {
-    if (this.trim().split(' ').length >= words.length) {
-        let wordsMatch = true
-        const text = this.toLowerCase()
-        for (let word of words) {
-            if (Array.isArray(word)) {
-                let optionOccurs = false
-                for (let option of word) {
-                    optionOccurs = optionOccurs || text.match(option)
-                }
-                wordsMatch = wordsMatch && optionOccurs
-            } else {
-                wordsMatch = wordsMatch && text.match(word)
+    let wordMatches = 0
+    const text = this.toLowerCase()
+    for (let word of words) {
+        if (Array.isArray(word)) {
+            let optionOccurs = false
+            for (let option of word) {
+                optionOccurs = optionOccurs || text.match(option)
             }
+            wordMatches += optionOccurs ? 1 : 0
+        } else {
+            wordMatches += text.match(word) ? 1 : 0
         }
-        return wordsMatch
-    } else {
-        return false
     }
+    return wordMatches == words.length
+}
+
+String.prototype.getNum = function() {
+    return this.replace(/[^\d.]/g, '')
 }
 
 // Keyboards
@@ -47,13 +47,15 @@ bot.on('message', (ctx) => {
     // ctx.telegram.sendCopy(ctx.from.id, ctx.message, Extra.markup(keyboard))
     // ctx.telegram.sendMessage(ctx.from.id, 'kuntul')
     const text = ctx.message.text
-    if (text.contains([[/(set)/i, /(change)/i], /(daily)/i, /(reminder)/i, ])) {
-        const num = text.replace ( /[^\d.]/g, '' );
-        ctx.reply('Alright! We’ll remind you at ' + num + ' everyday.')
-    } else if (text.contains([[/(set)/i, /(change)/i], /(class)/i, /(reminder)/i])) {
-        const num = text.replace ( /[^\d.]/g, '' );
-        ctx.reply('Alright! We’ll remind you ' + num + ' minutes before class.')
-    } else if (text.contains([[/(set)/i, /(change)/i], [/(homework)/i, /(quiz)/i, /(deadline)/i], /(reminder)/i])) {
+    if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
+        const num = text.getNum()
+        if (num) ctx.reply('Alright! We’ll remind you at ' + text.getNum() + ' everyday.')
+        else ctx.reply('Please state when you would like to be reminded.')
+    } else if (text.contains([['set', 'change'], 'class', 'reminder'])) {
+        const num = text.getNum()
+        if (num) ctx.reply('Alright! We’ll remind you ' + num + ' minutes before class.')
+        else ctx.reply('Please state when you would like to be reminded.')
+    } else if (text.contains([['set', 'change'], ['homework', 'quiz', 'deadline'], 'reminder'])) {
         ctx.reply('HWQ reminder')
     } else {
         ctx.reply('Sorry, I don\'t understand that. ☹️')
