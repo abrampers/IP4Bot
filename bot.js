@@ -33,6 +33,12 @@ const keyboard = Markup.inlineKeyboard([
 //   Markup.callbackButton('Delete', 'delete')
 ])
 
+// Keyboards
+const class_info = Markup.inlineKeyboard([
+  Markup.urlButton('Click here to listen', 'http://telegraf.js.org'),
+//   Markup.callbackButton('Delete', 'delete')
+])
+
 // Events
 bot.start((ctx) => {
     ctx.reply('Hello ' + ctx.message.from.first_name + ', IP4 the bot is ready to serve! 🤖').then(() => {
@@ -158,6 +164,30 @@ bot.on('message', (ctx) => {
     } else if (text.contains(['thank you'])) {
         ctx.reply('You\'re welcome ' + ctx.message.from.first_name + '! 😁')
     } else {
+    }
+
+
+    // Class Information
+    else if (text.contains(['class_info_demo'])) {
+        ctx.replyWithPhoto({ source: 'assets/class_info1.png' })
+        ctx.reply('Hi! Let me tell you your classes for today', Markup
+            .keyboard([
+                ['Yes, what are my classes for today?'], 
+                ['No, thank you!'],
+            ])
+            .oneTime()
+            .resize()
+            .extra()
+        )
+    } else if (text == 'Yes, what are my classes for today?') {
+        ctx.reply('Here!')
+        ctx.replyWithAudio({ source: 'assets/class_info2.m4a' })
+        // ctx.replyWithAudio({ source: 'assets/class_info1.mp3' })
+        // ctx.replyWithAudio({url: 'https://server.tld/file.mp3'})
+    } else if (text == 'No, thank you!') {
+        ctx.reply('Alright!')
+    }
+    else {
         ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
 })
