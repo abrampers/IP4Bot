@@ -48,11 +48,18 @@ bot.action('delete', ({ deleteMessage }) => deleteMessage())
 // Replies
 bot.on('message', (ctx) => {
     const text = ctx.message.text
-    if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
+    if (text.contains([['get', 'see'], 'transcript'])) {
+        let message = '';
+        message += 'Here\'s your latest transcript!\n\n';
+        message += '> MA1101 - Mathematics 1A (Grade: A)\n';
+        message += '> FI1101 - Physics 1A (Grade: A)\n';
+        message += '> KI1102 - Chemistry 1A (Grade: A)\n\n';
+        message += 'GPA: 4.00'
+        ctx.reply(message)
+    } else if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you at ' + text.getNum() + ' everyday.')
         else ctx.reply('Please state when you would like to be reminded.')
-
     } else if (text.contains([['set', 'change'], 'class', 'reminder'])) {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you ' + num + ' minutes before class.')
@@ -148,6 +155,8 @@ bot.on('message', (ctx) => {
         ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
     } else if (text.contains(['help'])) {
         ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
+    } else if (text.contains(['thank you'])) {
+        ctx.reply('You\'re welcome ' + ctx.message.from.first_name + '! 😁')
     } else {
         ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
