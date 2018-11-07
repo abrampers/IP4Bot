@@ -163,12 +163,7 @@ bot.on('message', (ctx) => {
         ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
     } else if (text.contains(['thank you'])) {
         ctx.reply('You\'re welcome ' + ctx.message.from.first_name + '! 😁')
-    } else {
-    }
-
-
-    // Class Information
-    else if (text.contains(['class_info_demo'])) {
+    } else if (text.contains(['class_info_demo'])) {
         ctx.replyWithPhoto({ source: 'assets/class_info1.png' })
         ctx.reply('Hi! Let me tell you your classes for today', Markup
             .keyboard([
