@@ -12,4 +12,5 @@ There are 8 clustered functionality that we wish to implement:
 * Course recommendation: saving time in class research by providing potential class information based on transcript and interest.  
 * Academic regulation: provide information about academic regulation based on the user university’s academic law document.  
 * Subject exercise: online standardized testing to test the student’s ability.  
+
 We want to target this product specifically to active undergraduate students that presumably has an internet access whose university already has, or willing to move to, an online administration system.   
