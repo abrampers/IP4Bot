@@ -55,13 +55,9 @@ bot.action('delete', ({ deleteMessage }) => deleteMessage())
 bot.on('message', (ctx) => {
     const text = ctx.message.text
     if (text.contains([['get', 'see'], 'transcript'])) {
-        let message = '';
-        message += 'Here\'s your latest transcript!\n\n';
-        message += '> MA1101 - Mathematics 1A (Grade: A)\n';
-        message += '> FI1101 - Physics 1A (Grade: A)\n';
-        message += '> KI1102 - Chemistry 1A (Grade: A)\n\n';
-        message += 'GPA: 4.00'
-        ctx.reply(message)
+        ctx.reply('Here\'s your transcript!').then(() => {
+            ctx.replyWithPhoto({ source: 'assets/transcript.png' })
+        })
     } else if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you at ' + text.getNum() + ' everyday.')
@@ -82,7 +78,7 @@ bot.on('message', (ctx) => {
     } else if (text.contains(['start', 'exercise'])) {
         ctx.reply('Hi ' + ctx.message.from.first_name + '! Welcome to Subject Exercise for IP4 😁. \n\nThis Exercise is a fascinating challange you surely gonna love!\n\nAre you ready to go ? 😁\n\nPress the “subject” do want to start the exercise.', Markup
             .keyboard([
-            ['TTKI', 'PTI'], 
+            ['TTKI', 'PTI'],
             ['KIMIA', 'ENGLISH'], 
             ])
             .oneTime()
@@ -92,10 +88,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'PTI') {
         ctx.reply('Do you know? When did personal computers become available?', Markup
             .keyboard([
-                ['Before 1950'], 
+                ['Before 1950'],
                 ['Between 1950 and 1965'],
-                ['Between 1966 and 1990'], 
-                ['Between 1991 and 2005'], 
+                ['Between 1966 and 1990'],
+                ['Between 1991 and 2005'],
             ])
             .oneTime()
             .resize()
@@ -104,10 +100,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'Before 1950' || text == 'Between 1950 and 1965' || text == 'Between 1966 and 1990' || text == 'Between 1991 and 2005') {
         ctx.reply('Which of these technologies was developed most recently', Markup
             .keyboard([
-                ['The mainframe computer'], 
+                ['The mainframe computer'],
                 ['The laptop computer'],
-                ['The netbook'], 
-                ['The embedded computer'], 
+                ['The netbook'],
+                ['The embedded computer'],
             ])
             .oneTime()
             .resize()
@@ -116,10 +112,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'The mainframe computer' || text == 'The laptop computer' || text == 'The netbook' || text == 'The embedded computer') {
         ctx.reply('Storage devices can be connected to the CPU and memory via ...', Markup
             .keyboard([
-                ['Expansion slots'], 
+                ['Expansion slots'],
                 ['Ports'],
-                ['Bays'], 
-                ['All of the above'], 
+                ['Bays'],
+                ['All of the above'],
             ])
             .oneTime()
             .resize()
@@ -128,10 +124,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'Expansion slots' || text == 'Ports' || text == 'Bays' || text == 'All of the above') {
         ctx.reply('A computer’s internal bus can be connected to an external bus through ...', Markup
             .keyboard([
-                ['a Depot'], 
+                ['a Depot'],
                 ['a CPU'],
-                ['a Port'], 
-                ['a Flash'], 
+                ['a Port'],
+                ['a Flash'],
             ])
             .oneTime()
             .resize()
@@ -167,7 +163,7 @@ bot.on('message', (ctx) => {
         ctx.replyWithPhoto({ source: 'assets/class_info1.png' })
         ctx.reply('Hi! Let me tell you your classes for today', Markup
             .keyboard([
-                ['Yes, what are my classes for today?'], 
+                ['Yes, what are my classes for today?'],
                 ['No, thank you!'],
             ])
             .oneTime()
@@ -201,7 +197,7 @@ function startReminders(ctx) {
         if (seconds == 0) {
             const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
             const eventMinutes = '' + (minutes + 30) % 60
-            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' + 
+            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' +
                     eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!')
         }
         // Homework/quiz deadline reminder
