@@ -27,6 +27,12 @@ String.prototype.getNum = function() {
     return this.replace(/[^\d.]/g, '')
 }
 
+// BAD BOY = BAD SCORE
+const bad_score = Markup.inlineKeyboard([
+    ['Score Analytics'],
+    ['']
+])
+
 // Keyboards
 const keyboard = Markup.inlineKeyboard([
   Markup.urlButton('Details', 'http://telegraf.js.org'),
@@ -153,7 +159,7 @@ bot.on('message', (ctx) => {
         ctx.reply('This exercise is not available yet ☹️');
     } else if (text == 'ENGLISH') {
         ctx.reply('This exercise is not available yet ☹️');
-    } else if (text.contains([['hello', 'halo', 'hi']])) {
+    } else if (text.contains([['hello', 'halo']])) {
         ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
     } else if (text.contains(['help'])) {
         ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
@@ -177,8 +183,15 @@ bot.on('message', (ctx) => {
         // ctx.replyWithAudio({url: 'https://server.tld/file.mp3'})
     } else if (text == 'No, thank you!') {
         ctx.reply('Alright!')
-    }
-    else {
+    } else if (text == 'See Score History') {
+        ctx.reply('Here\'s your score history!').then(() => {
+            ctx.replyWithPhoto({ source: 'assets/score.png' })
+        })
+    } else if (text == 'Study Tips!' ){
+        ctx.reply('Here\'s a cool video on study tips! https://www.youtube.com/watch?v=p60rN9JEapg')
+    } else if (text == 'Nah, I\'m ok') {
+        ctx.reply('Okay then, have a nice day!')
+    } else {
         ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
 })
@@ -213,7 +226,15 @@ function startReminders(ctx) {
         // Bad score reminder
         // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
         if (seconds == 0) {
-            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Extra.markup(keyboard))
+            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Markup
+                .keyboard([
+                    ['See Score History'],
+                    ['Study Tips!'],
+                    ['Nah, I\'m ok']
+                ])
+                .oneTime()
+                .resize()
+                .extra())
         }
     }, 1000)
 }
