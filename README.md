@@ -14,3 +14,25 @@ There are 8 clustered functionality that we wish to implement:
 * Subject exercise: online standardized testing to test the student’s ability.  
 
 We want to target this product specifically to active undergraduate students that presumably has an internet access whose university already has, or willing to move to, an online administration system.   
+
+
+## Prerequisite
+
+Node.js
+
+
+## Installation
+
+```
+npm install
+```
+
+# How To Use
+
+Open this project directory, and run
+
+```
+npm start
+```
+
+Open Telegram, add @IP4_Bot and start the conversation by sending `/start` message
