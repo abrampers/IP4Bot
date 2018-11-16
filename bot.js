@@ -176,7 +176,10 @@ bot.on('message', (ctx) => {
         // ctx.replyWithAudio({url: 'https://server.tld/file.mp3'})
     } else if (text == 'No, thank you!') {
         ctx.reply('Alright!')
-    } 
+
+    } else if (text.contains(['course'])){
+        ctx.reply('Here is your course recommendation!', Extra.markup(keyboard))
+    }
 
 
 
@@ -215,6 +218,10 @@ function startReminders(ctx) {
         }
         // Bad score reminder
         // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
+        if (seconds == 0) {
+            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Extra.markup(keyboard))
+        }
+
         if (seconds == 0) {
             ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Extra.markup(keyboard))
         }
