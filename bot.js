@@ -178,7 +178,7 @@ bot.on('message', (ctx) => {
         ctx.reply('Alright!')
 
     } else if (text.contains(['course'])){
-        ctx.reply('Here is your course recommendation!', Extra.markup(keyboard))
+        ctx.reply('Here some suggestion for your next semester', Extra.markup(keyboard))
     }
 
 
