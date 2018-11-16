@@ -27,6 +27,12 @@ String.prototype.getNum = function() {
     return this.replace(/[^\d.]/g, '')
 }
 
+// BAD BOY = BAD SCORE
+const bad_score = Markup.inlineKeyboard([
+    ['Score Analytics'],
+    ['']
+])
+
 // Keyboards
 const keyboard = Markup.inlineKeyboard([
   Markup.urlButton('Details', 'http://telegraf.js.org'),
@@ -54,11 +60,14 @@ bot.action('delete', ({ deleteMessage }) => deleteMessage())
 // Replies
 bot.on('message', (ctx) => {
     const text = ctx.message.text
-    if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
+    if (text.contains([['get', 'see'], 'transcript'])) {
+        ctx.reply('Here\'s your transcript!').then(() => {
+            ctx.replyWithPhoto({ source: 'assets/transcript.png' })
+        })
+    } else if (text.contains([['set', 'change'], 'daily', 'reminder'])) {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you at ' + text.getNum() + ' everyday.')
         else ctx.reply('Please state when you would like to be reminded.')
-
     } else if (text.contains([['set', 'change'], 'class', 'reminder'])) {
         const num = text.getNum()
         if (num) ctx.reply('Alright! We’ll remind you ' + num + ' minutes before class.')
@@ -75,7 +84,7 @@ bot.on('message', (ctx) => {
     } else if (text.contains(['start', 'exercise'])) {
         ctx.reply('Hi ' + ctx.message.from.first_name + '! Welcome to Subject Exercise for IP4 😁. \n\nThis Exercise is a fascinating challange you surely gonna love!\n\nAre you ready to go ? 😁\n\nPress the “subject” do want to start the exercise.', Markup
             .keyboard([
-            ['TTKI', 'PTI'], 
+            ['TTKI', 'PTI'],
             ['KIMIA', 'ENGLISH'], 
             ])
             .oneTime()
@@ -85,10 +94,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'PTI') {
         ctx.reply('Do you know? When did personal computers become available?', Markup
             .keyboard([
-                ['Before 1950'], 
+                ['Before 1950'],
                 ['Between 1950 and 1965'],
-                ['Between 1966 and 1990'], 
-                ['Between 1991 and 2005'], 
+                ['Between 1966 and 1990'],
+                ['Between 1991 and 2005'],
             ])
             .oneTime()
             .resize()
@@ -97,10 +106,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'Before 1950' || text == 'Between 1950 and 1965' || text == 'Between 1966 and 1990' || text == 'Between 1991 and 2005') {
         ctx.reply('Which of these technologies was developed most recently', Markup
             .keyboard([
-                ['The mainframe computer'], 
+                ['The mainframe computer'],
                 ['The laptop computer'],
-                ['The netbook'], 
-                ['The embedded computer'], 
+                ['The netbook'],
+                ['The embedded computer'],
             ])
             .oneTime()
             .resize()
@@ -109,10 +118,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'The mainframe computer' || text == 'The laptop computer' || text == 'The netbook' || text == 'The embedded computer') {
         ctx.reply('Storage devices can be connected to the CPU and memory via ...', Markup
             .keyboard([
-                ['Expansion slots'], 
+                ['Expansion slots'],
                 ['Ports'],
-                ['Bays'], 
-                ['All of the above'], 
+                ['Bays'],
+                ['All of the above'],
             ])
             .oneTime()
             .resize()
@@ -121,10 +130,10 @@ bot.on('message', (ctx) => {
     } else if (text == 'Expansion slots' || text == 'Ports' || text == 'Bays' || text == 'All of the above') {
         ctx.reply('A computer’s internal bus can be connected to an external bus through ...', Markup
             .keyboard([
-                ['a Depot'], 
+                ['a Depot'],
                 ['a CPU'],
-                ['a Port'], 
-                ['a Flash'], 
+                ['a Port'],
+                ['a Flash'],
             ])
             .oneTime()
             .resize()
@@ -142,7 +151,7 @@ bot.on('message', (ctx) => {
             .resize()
             .extra()
         )
-    } else if (text == 'a Depot' || text == 'a Port' || text == 'a CPU' || text == 'a Flash') {
+    // } else if (text == 'a Depot' || text == 'a Port' || text == 'a CPU' || text == 'a Flash') {
         ctx.reply(ctx.message.from.first_name + ', You get 50 points in this exercise ☹️\n\nToo bad, you have to study harder ☹️');
     } else if (text == 'TTKI') {
         ctx.reply('This exercise is not available yet ☹️');
@@ -150,19 +159,17 @@ bot.on('message', (ctx) => {
         ctx.reply('This exercise is not available yet ☹️');
     } else if (text == 'ENGLISH') {
         ctx.reply('This exercise is not available yet ☹️');
-    } else if (text.contains([['hello', 'halo', 'hi']])) {
+    } else if (text.contains([['hello', 'halo']])) {
         ctx.reply('Hello ' + ctx.message.from.first_name + '! 😁')
     } else if (text.contains(['help'])) {
         ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
-    } 
-
-
-    // Class Information
-    else if (text.contains(['class_info_demo'])) {
+    } else if (text.contains(['thank you'])) {
+        ctx.reply('You\'re welcome ' + ctx.message.from.first_name + '! 😁')
+    } else if (text.contains(['class_info_demo'])) {
         ctx.replyWithPhoto({ source: 'assets/class_info1.png' })
         ctx.reply('Hi! Let me tell you your classes for today', Markup
             .keyboard([
-                ['Yes, what are my classes for today?'], 
+                ['Yes, what are my classes for today?'],
                 ['No, thank you!'],
             ])
             .oneTime()
@@ -177,14 +184,19 @@ bot.on('message', (ctx) => {
     } else if (text == 'No, thank you!') {
         ctx.reply('Alright!')
 
+
     } else if (text.contains(['course'])){
         ctx.reply('Here some suggestion for your next semester', Extra.markup(keyboard))
-    }
 
-
-
-
-    else {
+    } else if (text == 'See Score History') {
+        ctx.reply('Here\'s your score history!').then(() => {
+            ctx.replyWithPhoto({ source: 'assets/score.png' })
+        })
+    } else if (text == 'Study Tips!' ){
+        ctx.reply('Here\'s a cool video on study tips! https://www.youtube.com/watch?v=p60rN9JEapg')
+    } else if (text == 'Nah, I\'m ok') {
+        ctx.reply('Okay then, have a nice day!')
+    } else {
         ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
 })
@@ -203,7 +215,7 @@ function startReminders(ctx) {
         if (seconds == 0) {
             const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
             const eventMinutes = '' + (minutes + 30) % 60
-            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' + 
+            ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' +
                     eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!')
         }
         // Homework/quiz deadline reminder
@@ -219,7 +231,15 @@ function startReminders(ctx) {
         // Bad score reminder
         // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
         if (seconds == 0) {
-            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Extra.markup(keyboard))
+            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Markup
+                .keyboard([
+                    ['See Score History'],
+                    ['Study Tips!'],
+                    ['Nah, I\'m ok']
+                ])
+                .oneTime()
+                .resize()
+                .extra())
         }
 
         if (seconds == 0) {
