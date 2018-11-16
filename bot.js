@@ -151,7 +151,7 @@ bot.on('message', (ctx) => {
             .resize()
             .extra()
         )
-    // } else if (text == 'a Depot' || text == 'a Port' || text == 'a CPU' || text == 'a Flash') {
+    } else if (text == 'RAM' || text == 'ROM' || text == 'CPU' || text == 'Internet') {
         ctx.reply(ctx.message.from.first_name + ', You get 50 points in this exercise ☹️\n\nToo bad, you have to study harder ☹️');
     } else if (text == 'TTKI') {
         ctx.reply('This exercise is not available yet ☹️');
