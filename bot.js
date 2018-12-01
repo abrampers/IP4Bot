@@ -7,6 +7,7 @@ const mysql = require('mysql');
 const BOT_TOKEN = '747892200:AAESi-TqEW25rLjhgQvRaZrkXL80uBlDuNU'
 const bot = new Telegraf(BOT_TOKEN)
 
+var allChatID = []
 // Mysql database
 
 var connection = mysql.createConnection({
@@ -17,8 +18,22 @@ var connection = mysql.createConnection({
 });
 
 connection.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
+    if (err) throw err;
+    console.log("Connected!");
+
+    connection.query('SELECT * FROM chatId', function (error, results, fields) {
+      if (error) throw error;
+
+      if (results.length == 0) {
+        console.log('Database kosong!');
+      } else {
+        console.log('ChatId diambil! Total: ' + results.length);
+        for(i = 0; i < results.length; i++){
+            console.log(results[i].ID);
+            allChatID.push(results[i].ID);
+        }
+      }
+    });
 });
 
 // Helpers
@@ -68,7 +83,7 @@ bot.start((ctx) => {
 
       if (results.length == 0) {
         console.log('Koneksi baru! ID: ', ctx.chat.id);
-
+        allChatID.push(ctx.chat.id);
         connection.query('INSERT INTO chatID VALUES(' + ctx.chat.id + ')', function (error, results, fields) {
 
         });
@@ -192,24 +207,6 @@ bot.on('message', (ctx) => {
         ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
     } else if (text.contains(['thank you'])) {
         ctx.reply('You\'re welcome ' + ctx.message.from.first_name + '! 😁')
-    } else if (text.contains(['class_info_demo'])) {
-        ctx.replyWithPhoto({ source: 'assets/class_info1.png' })
-        ctx.reply('Hi! Let me tell you your classes for today', Markup
-            .keyboard([
-                ['Yes, what are my classes for today?'],
-                ['No, thank you!'],
-            ])
-            .oneTime()
-            .resize()
-            .extra()
-        )
-    } else if (text == 'Yes, what are my classes for today?') {
-        ctx.reply('Here!')
-        ctx.replyWithAudio({ source: 'assets/class_info2.m4a' })
-        // ctx.replyWithAudio({ source: 'assets/class_info1.mp3' })
-        // ctx.replyWithAudio({url: 'https://server.tld/file.mp3'})
-    } else if (text == 'No, thank you!') {
-        ctx.reply('Alright!')
     } else if (text.contains(['what', 'course'])){
         ctx.reply('Based on your grades and previously taken courses, I suggest that you take Natural Language Processing course for your next semester!')
     } else if (text.contains(['see', 'score', 'history'])) {
@@ -220,6 +217,76 @@ bot.on('message', (ctx) => {
         ctx.reply('Here\'s a cool video on study tips! https://www.youtube.com/watch?v=p60rN9JEapg')
     } else if (text == 'Nah, I\'m ok') {
         ctx.reply('Okay then, have a nice day!')
+
+
+
+
+    // ~~ REMINDER SECTION ~~
+    } else if (text.contains(['class_reminder_demo'])) {
+        const hours = date.getHours()
+        const minutes = date.getMinutes()
+        const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
+        const eventMinutes = '' + (minutes + 30) % 60
+
+        for (i = 0; i < allChatID.length; i++){
+            console.log('Sending class reminder to ', allChatID[i]);
+            bot.telegram.sendMessage(allChatID[i], 
+                'Don’t forget to attend AI lecture in Room 7606 at ' +
+                eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!'
+            );
+        }
+
+    } else if (text.contains(['homework_reminder_demo'])) {
+        for (i = 0; i < allChatID.length; i++){
+            console.log('Sending homework reminder to ', allChatID[i]);
+            bot.telegram.sendMessage(allChatID[i], 
+                'Don\'t forget your Artificial Intelligence homework!. It\'s on tommorow!', 
+                Extra.markup(Markup.inlineKeyboard([
+                Markup.urlButton('Details', 'https://stei.kuliah.itb.ac.id/pluginfile.php/22876/mod_resource/content/2/Tugas%20Besar%202.pdf'),
+                //   Markup.callbackButton('Delete', 'delete')
+                ]))
+            );
+        }
+
+    } else if (text.contains(['quiz_reminder_demo'])) {
+
+
+    } else if (text.contains(['class_attendance_reminder_demo'])) {
+
+
+
+    } else if (text.contains(['bad_score_reminder_demo'])) {
+
+
+    } else if (text.contains(['class_info_demo'])) {
+        for (i = 0; i < allChatID.length; i++){
+            console.log('Sending class info to ', allChatID[i]);
+
+            bot.telegram.sendPhoto(allChatID[i], 
+                { source: 'assets/class_info1.png' }
+            );
+            bot.telegram.sendMessage(allChatID[i], 
+                'Hi! Let me tell you your classes for today', Markup
+                            .keyboard([
+                                ['Yes, what are my classes for today?'],
+                                ['No, thank you!'],
+                            ])
+                            .oneTime()
+                            .resize()
+                            .extra()
+            );
+
+        }
+    } else if (text == 'Yes, what are my classes for today?') {
+        ctx.reply('Here!')
+        ctx.replyWithAudio({ source: 'assets/class_info2.m4a' })
+
+    } else if (text == 'No, thank you!') {
+        ctx.reply('Alright!')
+
+
+
+
     } else {
         ctx.reply('Sorry, I didn\'t understand that. ☹️')
     }
@@ -236,11 +303,11 @@ function startReminders(ctx) {
         const demo_hours = hours
         const demo_minute = minutes
         const demo_second = -1000
-        console.log("\nJam: "+hours)
-        console.log("Menit: "+minutes)
-        console.log("Detik: "+seconds)
+        // console.log("\nJam: "+hours)
+        // console.log("Menit: "+minutes)
+        // console.log("Detik: "+seconds)
 
-        // Homework deadline reminder
+        // Class reminder
         if (seconds == -1) {
             const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
             const eventMinutes = '' + (minutes + 30) % 60
@@ -248,9 +315,24 @@ function startReminders(ctx) {
                     eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!')
         }
 
+
+        // Homework deadline reminder
+        if (seconds == -1) {
+            ctx.reply('Don\'t forget your Artificial Intelligence homework!. It\'s on tommorow!', 
+                            Extra.markup(Markup.inlineKeyboard([
+                            Markup.urlButton('Details', 'https://stei.kuliah.itb.ac.id/pluginfile.php/22876/mod_resource/content/2/Tugas%20Besar%202.pdf'),
+                            //   Markup.callbackButton('Delete', 'delete')
+                            ])))
+        }
+
+
         // Quiz deadline reminder
         if (seconds == -1) {
-            ctx.reply('Don\'t forget your MPPL quiz. It\'s on tommorow!', Extra.markup(keyboard))
+            ctx.reply('Don\'t forget your MPPL quiz. It\'s on tommorow!', 
+                            Extra.markup(Markup.inlineKeyboard([
+                            Markup.urlButton('Details', 'https://stei.kuliah.itb.ac.id/pluginfile.php/23089/mod_resource/content/0/Tugas%20SW%20Dev%20Plan.pdf'),
+                            //   Markup.callbackButton('Delete', 'delete')
+                            ])))
         }
 
         // Class attendance reminder
