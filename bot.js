@@ -223,6 +223,7 @@ bot.on('message', (ctx) => {
 
     // ~~ REMINDER SECTION ~~
     } else if (text.contains(['class_reminder_demo'])) {
+        const date = new Date()
         const hours = date.getHours()
         const minutes = date.getMinutes()
         const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
@@ -250,12 +251,42 @@ bot.on('message', (ctx) => {
 
     } else if (text.contains(['quiz_reminder_demo'])) {
 
+        for (i = 0; i < allChatID.length; i++){
+            console.log('Sending quiz reminder to ', allChatID[i]);
+            bot.telegram.sendMessage(allChatID[i], 
+                'Don\'t forget your MPPL quiz. It\'s on tommorow!', 
+                Extra.markup(Markup.inlineKeyboard([
+                Markup.urlButton('Details', 'https://stei.kuliah.itb.ac.id/pluginfile.php/23088/mod_resource/content/0/MPPL%20Integration%20Management.pdf'),
+                //   Markup.callbackButton('Delete', 'delete')
+                ]))
+            );
+        }
 
     } else if (text.contains(['class_attendance_reminder_demo'])) {
 
-
+        for (i = 0; i < allChatID.length; i++){
+            console.log('Sending attendance reminder to ', allChatID[i]);
+            bot.telegram.sendMessage(allChatID[i], 
+                'Hi ' + ctx.message.from.first_name + ', watch out on your AI attendance, you only have 1 absence left!'
+            );
+        }
 
     } else if (text.contains(['bad_score_reminder_demo'])) {
+
+        for (i = 0; i < allChatID.length; i++){
+            console.log('Bad score reminder to ', allChatID[i]);
+            bot.telegram.sendMessage(allChatID[i], 
+                'Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', 
+                Markup.keyboard([
+                    ['See Score History'],
+                    ['Study Tips!'],
+                    ['Nah, I\'m ok']
+                ])
+                .oneTime()
+                .resize()
+                .extra()
+            );
+        }
 
 
     } else if (text.contains(['class_info_demo'])) {
@@ -283,7 +314,6 @@ bot.on('message', (ctx) => {
 
     } else if (text == 'No, thank you!') {
         ctx.reply('Alright!')
-
 
 
 
