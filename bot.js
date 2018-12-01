@@ -232,7 +232,7 @@ bot.on('message', (ctx) => {
         for (i = 0; i < allChatID.length; i++){
             console.log('Sending class reminder to ', allChatID[i]);
             bot.telegram.sendMessage(allChatID[i], 
-                'Don’t forget to attend AI lecture in Room 7606 at ' +
+                'Don’t forget to attend Artificial Intelligence lecture in Room 7606 at ' +
                 eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!'
             );
         }
