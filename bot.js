@@ -1,9 +1,25 @@
 const Telegraf = require('telegraf')
 const Extra = require('telegraf/extra')
 const Markup = require('telegraf/markup')
+const mysql = require('mysql');
+
 
 const BOT_TOKEN = '747892200:AAESi-TqEW25rLjhgQvRaZrkXL80uBlDuNU'
 const bot = new Telegraf(BOT_TOKEN)
+
+// Mysql database
+
+var connection = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "wbd",
+  database : 'IP4Bot'
+});
+
+connection.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+});
 
 // Helpers
 String.prototype.contains = function(words) {
@@ -47,6 +63,17 @@ const class_info = Markup.inlineKeyboard([
 
 // Events
 bot.start((ctx) => {
+    connection.query('SELECT ID FROM chatID WHERE ID = ' + ctx.chat.id, function (error, results, fields) {
+      if (error) throw error;
+
+      if (results.length == 0) {
+        console.log('Koneksi baru! ID: ', ctx.chat.id);
+
+        connection.query('INSERT INTO chatID VALUES(' + ctx.chat.id + ')', function (error, results, fields) {
+
+        });
+      }
+    });
     ctx.reply('Hello ' + ctx.message.from.first_name + ', IP4 the bot is ready to serve! 🤖').then(() => {
         startReminders(ctx)
     })
@@ -183,16 +210,13 @@ bot.on('message', (ctx) => {
         // ctx.replyWithAudio({url: 'https://server.tld/file.mp3'})
     } else if (text == 'No, thank you!') {
         ctx.reply('Alright!')
-
-
-    } else if (text.contains(['course'])){
-        ctx.reply('Here some suggestion for your next semester', Extra.markup(keyboard))
-
-    } else if (text == 'See Score History') {
+    } else if (text.contains(['what', 'course'])){
+        ctx.reply('Based on your grades and previously taken courses, I suggest that you take Natural Language Processing course for your next semester!')
+    } else if (text.contains(['see', 'score', 'history'])) {
         ctx.reply('Here\'s your score history!').then(() => {
             ctx.replyWithPhoto({ source: 'assets/score.png' })
         })
-    } else if (text == 'Study Tips!' ){
+    } else if (text.contains(['study', 'tips'])){
         ctx.reply('Here\'s a cool video on study tips! https://www.youtube.com/watch?v=p60rN9JEapg')
     } else if (text == 'Nah, I\'m ok') {
         ctx.reply('Okay then, have a nice day!')
@@ -209,28 +233,33 @@ function startReminders(ctx) {
         const hours = date.getHours()
         const minutes = date.getMinutes()
         const seconds = date.getSeconds()
+        const demo_hours = hours
+        const demo_minute = minutes
+        const demo_second = -1000
+        console.log("\nJam: "+hours)
+        console.log("Menit: "+minutes)
+        console.log("Detik: "+seconds)
 
-        // Class reminder
-        // if (hours == 16 && minutes == 6 && seconds == 0) {
-        if (seconds == 0) {
+        // Homework deadline reminder
+        if (seconds == -1) {
             const eventHours = '' + Math.floor(hours + (minutes + 30) / 60)
             const eventMinutes = '' + (minutes + 30) % 60
             ctx.reply('Don’t forget to attend AI lecture in Room 7606 at ' +
                     eventHours + ':' + eventMinutes.padStart(2, '0') + 'AM!')
         }
-        // Homework/quiz deadline reminder
-        // if (hours == 16 && minutes == 8 && seconds == 0) {
-        if (seconds == 0) {
-            ctx.reply('Don\'t forget your AI homework. It\'s due on November 7!', Extra.markup(keyboard))
+
+        // Quiz deadline reminder
+        if (seconds == -1) {
+            ctx.reply('Don\'t forget your MPPL quiz. It\'s on tommorow!', Extra.markup(keyboard))
         }
+
         // Class attendance reminder
-        // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
-        if (seconds == 0) {
+        if (seconds == -1) {
             ctx.reply('Hi ' + ctx.message.from.first_name + ', watch out on your AI attendance, you only have 1 absence left!')
         }
+
         // Bad score reminder
-        // if (day == 2 && hours == 16 && minutes == 8 && seconds == 0) {
-        if (seconds == 0) {
+        if (seconds == -1) {
             ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Markup
                 .keyboard([
                     ['See Score History'],
@@ -240,10 +269,6 @@ function startReminders(ctx) {
                 .oneTime()
                 .resize()
                 .extra())
-        }
-
-        if (seconds == 0) {
-            ctx.reply('Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', Extra.markup(keyboard))
         }
     }, 1000)
 }
