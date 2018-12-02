@@ -241,7 +241,7 @@ bot.on('message', (ctx) => {
         for (i = 0; i < allChatID.length; i++){
             console.log('Sending homework reminder to ', allChatID[i]);
             bot.telegram.sendMessage(allChatID[i], 
-                'Don\'t forget your Artificial Intelligence homework!. It\'s on tommorow!', 
+                'Don\'t forget your Artificial Intelligence homework!. The deadline is 27 December 2018 23:59!', 
                 Extra.markup(Markup.inlineKeyboard([
                 Markup.urlButton('Details', 'https://stei.kuliah.itb.ac.id/pluginfile.php/22876/mod_resource/content/2/Tugas%20Besar%202.pdf'),
                 //   Markup.callbackButton('Delete', 'delete')
@@ -267,7 +267,7 @@ bot.on('message', (ctx) => {
         for (i = 0; i < allChatID.length; i++){
             console.log('Sending attendance reminder to ', allChatID[i]);
             bot.telegram.sendMessage(allChatID[i], 
-                'Hi ' + ctx.message.from.first_name + ', watch out on your AI attendance, you only have 1 absence left!'
+                'Watch out on your AI attendance, you only have 1 absence left!'
             );
         }
 
@@ -276,7 +276,7 @@ bot.on('message', (ctx) => {
         for (i = 0; i < allChatID.length; i++){
             console.log('Bad score reminder to ', allChatID[i]);
             bot.telegram.sendMessage(allChatID[i], 
-                'Hi ' + ctx.message.from.first_name + ', it seems that you are struggling on AI, you need to improve your scores to get a decent grade!', 
+                'Hi, it seems that you are struggling on Artificial Intelligence, you need to improve your scores to get a decent grade!', 
                 Markup.keyboard([
                     ['See Score History'],
                     ['Study Tips!'],
