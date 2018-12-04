@@ -102,7 +102,9 @@ bot.action('delete', ({ deleteMessage }) => deleteMessage())
 // Replies
 bot.on('message', (ctx) => {
     const text = ctx.message.text
-    if (text.contains([['get', 'see'], 'transcript'])) {
+    if(text == null){
+
+    } else if (text.contains([['get', 'see'], 'transcript'])) {
         ctx.reply('Here\'s your transcript!').then(() => {
             ctx.replyWithPhoto({ source: 'assets/transcript.png' })
         })
@@ -207,6 +209,7 @@ bot.on('message', (ctx) => {
         ctx.reply('"We cannot help everyone, but everyone can help someone."\n- Ronald Raegan')
     } else if (text.contains(['thank you'])) {
         ctx.reply('You\'re welcome ' + ctx.message.from.first_name + '! 😁')
+
     } else if (text.contains(['what', 'course'])){
         ctx.reply('Based on your grades and previously taken courses, I suggest that you take Natural Language Processing course for your next semester!')
     } else if (text.contains(['see', 'score', 'history'])) {
